@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Educavia — Level up. For real this time.</title>
+<meta name="description" content="Educavia is an AI-powered 3D RPG for college students. The only way to upgrade your character is to actually study for your classes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Hanken+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #08080d;
+  --surface: #12121a;
+  --surface-2: #1a1a26;
+  --border: #1f1f2e;
+  --text: #f5f5f7;
+  --text-dim: #8b8b9a;
+  --text-faint: #4a4a5a;
+  --accent: #00ff88;
+  --accent-dim: #00cc6e;
+  --accent-glow: rgba(0, 255, 136, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1000;
+  mix-blend-mode: overlay;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--text-faint) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Nav */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1.25rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  background: rgba(8, 8, 13, 0.7);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  color: var(--text);
+}
+
+.logo span { color: var(--accent); }
+
+.nav-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  display: flex;
+  align-items: center;
+}
+
+.nav-meta .dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin-right: 0.6rem;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8rem 0 6rem;
+  position: relative;
+}
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.headline {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(3.5rem, 11vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+}
+
+.headline .line {
+  display: block;
+  overflow: hidden;
+}
+
+.headline .line span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(110%);
+  animation: revealUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.headline .line:nth-child(1) span { animation-delay: 0.2s; }
+.headline .line:nth-child(2) span { animation-delay: 0.45s; }
+
+.headline .accent { color: var(--accent); }
+
+@keyframes revealUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.subheadline {
+  font-size: clamp(1.125rem, 1.8vw, 1.4rem);
+  line-height: 1.55;
+  color: var(--text-dim);
+  max-width: 720px;
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease 0.8s forwards;
+}
+
+.subheadline strong { color: var(--text); font-weight: 500; }
+
+.cta-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease 1s forwards;
+}
+
+.btn {
+  padding: 1rem 2rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 0 30px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  border-color: var(--border);
+  color: var(--text-dim);
+}
+
+.btn-ghost:hover {
+  border-color: var(--text);
+  color: var(--text);
+  background: transparent;
+  box-shadow: none;
+}
+
+.hero-stats {
+  position: absolute;
+  bottom: 3rem;
+  right: 2rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-align: right;
+  display: none;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease 1.2s forwards;
+}
+
+@media (min-width: 1024px) {
+  .hero-stats { display: block; }
+}
+
+.hero-stats .stat-line {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.1em;
+}
+
+.hero-stats .stat-value {
+  color: var(--accent);
+  min-width: 130px;
+  text-align: left;
+}
+
+/* Sections */
+section {
+  padding: 7rem 0;
+  position: relative;
+}
+
+.section-header {
+  margin-bottom: 3.5rem;
+}
+
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  letter-spacing: 0.2em;
+  margin-bottom: 0.75rem;
+}
+
+.section-title {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  max-width: 900px;
+}
+
+.section-body {
+  font-size: clamp(1.05rem, 1.3vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--text-dim);
+  max-width: 780px;
+}
+
+.section-body p { margin-bottom: 1.5rem; }
+.section-body p:last-child { margin-bottom: 0; }
+
+.section-body strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.section-body em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+/* Why Now grid */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.why-card {
+  padding: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.why-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.5s ease;
+}
+
+.why-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  background: var(--surface-2);
+}
+
+.why-card:hover::before {
+  width: 100%;
+}
+
+.why-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  letter-spacing: 0.2em;
+}
+
+.why-card h3 {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.why-card p {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* Visuals */
+.visuals {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.visual-placeholder {
+  aspect-ratio: 16/9;
+  border: 2px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.visual-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 20px,
+    rgba(0, 255, 136, 0.02) 20px,
+    rgba(0, 255, 136, 0.02) 40px
+  );
+}
+
+.visual-placeholder-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  text-align: center;
+  letter-spacing: 0.15em;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* About */
+.about-block {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .about-block { grid-template-columns: 1.3fr 1fr; gap: 4rem; }
+}
+
+.contact-card {
+  padding: 2.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+}
+
+.contact-card .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  letter-spacing: 0.2em;
+  margin-bottom: 0.6rem;
+}
+
+.contact-card .value {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 1.75rem;
+  text-transform: uppercase;
+  word-break: break-all;
+  transition: color 0.2s ease;
+}
+
+.contact-card .value:hover { color: var(--accent); }
+
+.contact-card .value-mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: 0.05em;
+  margin-bottom: 0;
+}
+
+/* Footer */
+footer {
+  padding: 3rem 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  letter-spacing: 0.15em;
+}
+
+footer .glow { color: var(--accent); }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .container { padding: 0 1.25rem; }
+  nav { padding: 1rem 1.25rem; }
+  .nav-meta { font-size: 0.6rem; letter-spacing: 0.1em; }
+  .hero { padding-top: 7rem; padding-bottom: 4rem; }
+  section { padding: 4.5rem 0; }
+  .section-header { margin-bottom: 2.5rem; }
+  .btn { padding: 0.9rem 1.5rem; font-size: 0.75rem; }
+  .cta-row { gap: 0.75rem; }
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">EDUCAVIA<span>.</span></div>
+  <div class="nav-meta"><span class="dot"></span>PRE-SEED // BUILDING</div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="section-label">[ EDUCAVIA — CHAPTER 01 ]</div>
+    <h1 class="headline">
+      <div class="line"><span>Level up.</span></div>
+      <div class="line"><span class="accent">For real this time.</span></div>
+    </h1>
+    <p class="subheadline">
+      Educavia is an <strong>AI-powered 3D RPG</strong> for college students. The only way to upgrade your character, unlock new weapons, and open new worlds is to <strong>actually study for your classes.</strong>
+    </p>
+    <div class="cta-row">
+      <a href="#about" class="btn">Get in touch</a>
+      <a href="#problem" class="btn btn-ghost">Read the pitch</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-line"><span>STAGE</span><span class="stat-value">PRE-SEED</span></div>
+    <div class="stat-line"><span>SECTOR</span><span class="stat-value">EDTECH × GAMING</span></div>
+    <div class="stat-line"><span>STATUS</span><span class="stat-value">IN DEVELOPMENT</span></div>
+  </div>
+</section>
+
+<section id="problem" class="reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">// 01 — THE PROBLEM</div>
+      <h2 class="section-title">Studying lost the war for attention.</h2>
+    </div>
+    <div class="section-body">
+      <p>A college student will grind <strong>40 hours into an RPG in a week</strong> and then can't open a textbook for 20 minutes. The dopamine math is brutal — games reward you every ten seconds, lectures reward you in four months.</p>
+      <p>The "study apps" trying to fix this — flashcards, timers, streak trackers — feel like chores wearing a productivity costume. None of them compete with what a 19-year-old's brain actually wants to do at 11pm on a Tuesday.</p>
+      <p>Educavia does — because Educavia <em>is</em> the game they want to be playing.</p>
+    </div>
+  </div>
+</section>
+
+<section id="solution" class="reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">// 02 — THE SOLUTION</div>
+      <h2 class="section-title">Real study unlocks real game power.</h2>
+    </div>
+    <div class="section-body">
+      <p>Educavia flips the model. The game is the prize — a cinematic 3D RPG with custom characters, real combat, multiple themed universes, and worlds worth exploring. <em>Real</em> studying is the only path to progression.</p>
+      <p>To upgrade weapons, unlock animations, evolve your character, or open new zones — you have to learn. An <strong>Expert AI</strong> cross-checks your stated goals against what you actually studied, so the system can't be gamed. Timed study sessions track effort. In-game questions provide secondary leveling.</p>
+      <p>Real learning translates directly into real game power.</p>
+    </div>
+  </div>
+</section>
+
+<section id="why-now" class="reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">// 03 — WHY NOW</div>
+      <h2 class="section-title">Three things just became true.</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-num">01</div>
+        <h3>AI Can Finally Verify Learning</h3>
+        <p>Not just "did the user click" — but whether they actually engaged with what they said they would study. That changes the entire incentive structure.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-num">02</div>
+        <h3>One Dev Can Ship a World</h3>
+        <p>Modern engines let small teams build experiences that used to require AAA studios with hundreds of people and tens of millions of dollars.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-num">03</div>
+        <h3>Attention Migrated</h3>
+        <p>Gen Z's attention has fully moved from textbooks to games. Meeting them where they are is no longer a nice-to-have — it's the only path forward.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="visuals reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">// 04 — THE BUILD</div>
+      <h2 class="section-title">In progress.</h2>
+    </div>
+    <div class="visual-placeholder">
+      <div class="visual-placeholder-text">
+        [ REPLACE THIS BLOCK WITH UNITY DEMO CLIP,<br>CONCEPT ART, OR SCREENSHOTS ]
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="reveal">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-num">// 05 — THE FOUNDER</div>
+      <h2 class="section-title">Built by one person. For now.</h2>
+    </div>
+    <div class="about-block">
+      <div class="section-body">
+        <p>Educavia is built by <strong>Hadee Suleiman</strong>.</p>
+        <p>22 year old college student from Florida currently building study tools for people to use.</p>
+        <p>I am building this because I have lived through this struggle of studying little but being able to play videogames for hours.</p>
+      </div>
+      <div class="contact-card">
+        <div class="label">// CONTACT</div>
+        <a href="mailto:[AntraialKarrier403210@gmail.com]" class="value">[AntraialKarrier403210@gmail.com]</a>
+        <div class="label">// STATUS</div>
+        <div class="value-mono">REMOTE // BUILDING DAILY</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    EDUCAVIA <span class="glow">//</span> © 2026 <span class="glow">//</span> ALL RIGHTS RESERVED
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
